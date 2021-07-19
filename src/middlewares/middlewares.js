@@ -1,42 +1,42 @@
-const { validationResult } = require("express-validator");
-const { ApiError } = require("../errors/apiError");
-const config = require("config");
-const jwt = require("jsonwebtoken");
+const { validationResult } = require( "express-validator" );
+const { ApiError } = require( "../errors/apiError" );
+const config = require( "config" );
+const jwt = require( "jsonwebtoken" );
 // const { UserModel } = require( "../models/user.model" );
 
 
-const validationError = async(req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        next(ApiError.BadRequestError(errors.array(), "badrequest error"))
+const validationError = async ( req, res, next ) => {
+    const errors = validationResult( req );
+    if ( !errors.isEmpty() ) {
+        next( ApiError.BadRequestError( errors.array(), "badrequest error" ) )
     } else {
         await next();
     }
 };
 
 // Check token
-const checkAuthToken = async(req, res, next) => {
-    if (req.method === 'OPTIONS') {
+const checkAuthToken = async ( req, res, next ) => {
+    if ( req.method === 'OPTIONS' ) {
         await next()
     } else {
         try {
             let token;
             if (
                 req.headers.authorization &&
-                req.headers.authorization.startsWith("Bearer")
+                req.headers.authorization.startsWith( "Bearer" )
             ) {
-                token = req.headers.authorization.split(" ")[1]; // "Bearer TOKEN"
+                token = req.headers.authorization.split( " " )[ 1 ]; // "Bearer TOKEN"
             }
-            if (!token) {
-                await res.status(401).json({ message: "auth error try middleware" });
+            if ( !token ) {
+                await res.status( 401 ).json( { message: "auth error try middleware" } );
             } else {
-                let decoded = jwt.verify(token, config.get("jwtSecret"));
+                let decoded = jwt.verify( token, config.get( "jwtSecret" ) );
                 req.user = decoded;
-                res.setHeader("Last-Modified", new Date().toUTCString());
+                res.setHeader( "Last-Modified", new Date().toUTCString() );
                 await next();
             }
-        } catch (error) {
-            return ApiError.UnauthorizedError(error, "auth error")
+        } catch ( error ) {
+            return ApiError.UnauthorizedError( error, "auth error" )
         }
     }
 }

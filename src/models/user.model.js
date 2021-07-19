@@ -16,6 +16,8 @@ const UserModel = sequelize.define( 'User', {
     freezeTableName: true,
 } );
 
+// the defined model is the class itself
+console.log( UserModel === sequelize.models.UserModel ); // true
 
 
 module.exports = {
