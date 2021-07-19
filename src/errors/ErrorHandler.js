@@ -1,7 +1,7 @@
 const { logger } = require( "../logger/logger" );
 const { ApiError } = require( "./ApiError" )
 
-const ErrorHandler = ( err, req, res, next ) => {
+const errorHandler = ( err, req, res, next ) => {
     console.error( err )
     // Write errors to log
     logger.error( err );
@@ -17,5 +17,5 @@ const ErrorHandler = ( err, req, res, next ) => {
 }
 
 module.exports = {
-    ErrorHandler
+    errorHandler
 }

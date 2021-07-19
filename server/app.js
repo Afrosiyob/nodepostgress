@@ -1,11 +1,12 @@
-const express = require( "express" )
-const config = require( "config" )
-const serveIndex = require( "serve-index" );
-const { connectSequelize } = require( "../services/connectDB" );
-const { ErrorHandler } = require( "../src/errors/ErrorHandler" );
+const express = require("express")
+const config = require("config")
+const serveIndex = require("serve-index");
+const { connectSequelize } = require("../services/connectDB");
+
 
 // Call All Routes
-const { userRouter } = require( "../src/routes/user.routes" );
+const { userRouter } = require("../src/routes/user.routes");
+const { errorHandler } = require("../src/errors/ErrorHandler");
 
 // Create server with app
 const app = express()
@@ -14,25 +15,25 @@ const app = express()
 connectSequelize()
 
 // Access json
-app.use( express.json( { extended: true } ) );
-app.use( express.urlencoded( { extended: false } ) );
+app.use(express.json({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 // Static files
 app.use(
     "/public",
-    express.static( "public" ),
-    serveIndex( "public", { icons: true } )
+    express.static("public"),
+    serveIndex("public", { icons: true })
 );
 
 // User Router
-app.use( "/api/user", userRouter )
+app.use("/api/user", userRouter)
 
 // Error Handler
 // Please put this code after last middleware
-app.use( ErrorHandler )
+app.use(errorHandler)
 
 // Get PORT
-const PORT = config.get( "PORT" ) || process.env.PORT || 5000
+const PORT = config.get("PORT") || process.env.PORT || 5000
 
 // Start server
-app.listen( PORT, () => console.log( `server is running on ${ PORT }` ) )
+app.listen(PORT, () => console.log(`server is running on ${ PORT }`))

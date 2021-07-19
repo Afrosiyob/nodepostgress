@@ -3,7 +3,6 @@ const { sequelize } = require( '../../services/connectDB' );
 
 const UserModel = sequelize.define( 'User', {
     // Model attributes are defined here
-
     username: {
         type: DataTypes.STRING,
         allowNull: false
@@ -14,9 +13,10 @@ const UserModel = sequelize.define( 'User', {
     }
 }, {
     timestamps: false,
-
     freezeTableName: true,
 } );
+
+
 
 module.exports = {
     UserModel
