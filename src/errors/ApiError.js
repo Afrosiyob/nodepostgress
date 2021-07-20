@@ -1,8 +1,8 @@
 class ApiError {
     constructor ( code, error, message ) {
-        this.code = code
-        this.error = error
-        this.message = message
+        this.code = code;
+        this.error = error;
+        this.message = message;
     }
 
     // Used when user fails to include a field (like no credit card information in a payment form)
@@ -25,6 +25,7 @@ class ApiError {
     // Used the request sent by the frontend is correct, but there was an error from the backend.
     static ServerError = ( msg ) =>
         new ApiError( 500, null, msg )
+
 }
 
 module.exports = {

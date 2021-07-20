@@ -1,25 +1,25 @@
 const { DataTypes } = require( 'sequelize' );
-const { sequelize } = require( '../../services/connectDB' );
+const { db } = require( '../../services/connect' );
 
-const UserModel = sequelize.define( 'User', {
+
+const User = db.define( 'User', {
     // Model attributes are defined here
     username: {
         type: DataTypes.STRING,
-        allowNull: false
+
     },
     password: {
         type: DataTypes.STRING
         // allowNull defaults to true
     }
 }, {
-    timestamps: false,
-    freezeTableName: true,
+    freezeTableName: true
+    // Other model options go here
 } );
 
-// the defined model is the class itself
-console.log( UserModel === sequelize.models.UserModel ); // true
-
+// `sequelize.define` also returns the model
+console.log( User === db.models.User ); // true
 
 module.exports = {
-    UserModel
+    User
 }

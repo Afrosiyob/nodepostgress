@@ -2,7 +2,7 @@ const { validationResult } = require( "express-validator" );
 const { ApiError } = require( "../errors/apiError" );
 const config = require( "config" );
 const jwt = require( "jsonwebtoken" );
-// const { UserModel } = require( "../models/user.model" );
+const { UserModel } = require( "../models/user.model" );
 
 
 const validationError = async ( req, res, next ) => {
@@ -14,7 +14,7 @@ const validationError = async ( req, res, next ) => {
     }
 };
 
-// Check token
+
 const checkAuthToken = async ( req, res, next ) => {
     if ( req.method === 'OPTIONS' ) {
         await next()
@@ -42,25 +42,25 @@ const checkAuthToken = async ( req, res, next ) => {
 }
 
 // Check permissions
-// const setPermissions = ( permissions ) => async ( req, res, next ) => {
-//     const { userId } = req.user;
-//     const user = await UserModel.findById( userId );
-//     if ( !user ) {
-//         next( ApiError.UnauthorizedError( "faild role", "no role" ) )
-//     } else {
-//         const { role } = user;
-//         if ( permissions.includes( role ) ) {
-//             await next();
-//         } else {
-//             next( ApiError.ForbiddenError( "no permession" ) )
-//         }
-//     }
-// };
+const setPermissions = ( permissions ) => async ( req, res, next ) => {
+    const { userId } = req.user;
+    const user = await UserModel.findById( userId );
+    if ( !user ) {
+        next( ApiError.UnauthorizedError( "faild role", "no role" ) )
+    } else {
+        const { role } = user;
+        if ( permissions.includes( role ) ) {
+            await next();
+        } else {
+            next( ApiError.ForbiddenError( "no permession" ) )
+        }
+    }
+};
 
 
 
 module.exports = {
     validationError,
     checkAuthToken,
-    // setPermissions
+    setPermissions
 }
