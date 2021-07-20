@@ -2,13 +2,11 @@ const express = require( "express" )
 const config = require( "config" )
 const serveIndex = require( "serve-index" );
 const morgan = require( "morgan" );
-
 const { userRouter } = require( "../src/routes/user.routes" );
 const { logger } = require( "../src/logger/logger" );
 const winston = require( "winston" );
 const { errorHandler } = require( "../src/errors/errorHandler" );
-
-
+const { connectDB } = require( "../services/connect" );
 
 // Create App server
 const app = express()
@@ -38,7 +36,6 @@ if ( app.get( "env" ) === "development" ) {
 // Api Routes
 app.use( "/api/user", userRouter )
 
-
 // Error Handler
 // Please put this code after last middleware
 app.use( errorHandler )
@@ -46,4 +43,7 @@ app.use( errorHandler )
 // Create PORT
 const PORT = config.get( "PORT" ) || process.env.PORT || 5000
 
-app.listen( PORT, connectDB )
+
+// Connect PSQL
+connectDB()
+app.listen( PORT, () => console.log( `Server is running on ${ PORT }` ) )
