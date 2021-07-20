@@ -7,6 +7,7 @@ const { logger } = require( "../src/logger/logger" );
 const winston = require( "winston" );
 const { errorHandler } = require( "../src/errors/errorHandler" );
 const { connectDB } = require( "../services/connect" );
+const { authRouter } = require( "../src/routes/auth.routes" );
 
 // Create App server
 const app = express()
@@ -35,6 +36,7 @@ if ( app.get( "env" ) === "development" ) {
 
 // Api Routes
 app.use( "/api/user", userRouter )
+app.use( "/api/auth", authRouter )
 
 // Error Handler
 // Please put this code after last middleware
