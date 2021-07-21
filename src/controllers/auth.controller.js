@@ -16,7 +16,7 @@ const authLogin = async ( req, res, next ) => {
             next( ApiError.BadRequestError( "failed password", "please enter currect password" ) )
         } else {
             const token = jwt.sign( { userId: user.id },
-                config.get( "jwtSecret" ), { expiresIn: "1s" }
+                config.get( "jwtSecret" ), { expiresIn: "1h" }
             );
             res.status( 200 ).json( {
                 data: { token, user_info: _.pick( user, [ "username", "role" ] ) },
