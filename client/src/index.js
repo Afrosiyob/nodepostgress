@@ -14,6 +14,8 @@ import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import { Provider } from "react-redux";
 import { store } from './redux/services/store.service';
 
+// import i18n (needs to be bundled ;)
+import './i18n';
 
 // Lazy component
 const App = lazy( () => import( "./App" ) )

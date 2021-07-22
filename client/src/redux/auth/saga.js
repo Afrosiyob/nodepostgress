@@ -1,8 +1,8 @@
-import { AUTH_LOGIN, AUTH_ME } from "../actions";
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ME } from "../actions";
 
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects'
 import { fetchAuthLogin, fetchAuthMe } from "../services/api.service";
-import { authLoginError, authLoginSuccess, authMeError, authMeSuccess } from "./action";
+import { authLoginError, authLoginSuccess, authLogoutError, authLogoutSuccess, authMeError, authMeSuccess } from "./action";
 import { notificationMessage } from "../services/notification.service";
 
 function* watchAuthLogin () {
@@ -41,15 +41,33 @@ function* workAuthMe ( { payload } ) {
         yield put( authMeError( error.response.data.message ) )
         notificationMessage( "error", error.response.data.message )
         localStorage.removeItem( "token" )
-        history.push( "/" )
+        history.push( "/login" )
     }
 
+}
+
+function* watchAuthLogout () {
+    yield takeEvery( AUTH_LOGOUT, workAuthLogout )
+}
+
+function* workAuthLogout ( { payload } ) {
+    const history = payload
+    try {
+        yield put( authLogoutSuccess() )
+        notificationMessage( "success", "bye" )
+        localStorage.removeItem( "token" )
+        history.push( "/login" )
+    } catch ( error ) {
+        yield put( authLogoutError( error ) )
+        notificationMessage( "error", error )
+    }
 }
 
 export default function* authSaga () {
     yield all( [
         fork( watchAuthLogin ),
-        fork( watchAuthMe )
+        fork( watchAuthMe ),
+        fork( watchAuthLogout )
     ] )
 }
 

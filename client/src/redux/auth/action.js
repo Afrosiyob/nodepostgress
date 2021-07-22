@@ -1,4 +1,4 @@
-import { AUTH_LOGIN, AUTH_LOGIN_ERROR, AUTH_LOGIN_SUCCESS, AUTH_ME, AUTH_ME_ERROR, AUTH_ME_SUCCESS } from "../actions";
+import { AUTH_LOGIN, AUTH_LOGIN_ERROR, AUTH_LOGIN_SUCCESS, AUTH_LOGOUT, AUTH_LOGOUT_ERROR, AUTH_LOGOUT_SUCCESS, AUTH_ME, AUTH_ME_ERROR, AUTH_ME_SUCCESS } from "../actions";
 
 export const authLogin = ( request, history ) => ( {
     type: AUTH_LOGIN,
@@ -27,5 +27,20 @@ export const authMeSuccess = ( response ) => ( {
 
 export const authMeError = ( error ) => ( {
     type: AUTH_ME_ERROR,
+    payload: error
+} )
+
+
+export const authLogout = ( history ) => ( {
+    type: AUTH_LOGOUT,
+    payload: history
+} )
+
+export const authLogoutSuccess = () => ( {
+    type: AUTH_LOGOUT_SUCCESS
+} )
+
+export const authLogoutError = ( error ) => ( {
+    type: AUTH_LOGOUT_ERROR,
     payload: error
 } )

@@ -23,32 +23,24 @@ import { useBreadCrumb } from "../../hooks/useBreadCrumb";
 
 
 const Admin = () => {
-
+    const { Header, Content, Footer, Sider } = Layout;
     const dispatch = useDispatch()
     // const { loading, data } = useSelector( state => state.authReducer )
     const history = useHistory()
-
-    const { Header, Content, Footer, Sider } = Layout;
     const [ width ] = useWindowSize();
     let location = useLocation();
-    const [ breadcrumbItems ] = useBreadCrumb( location );
     let { path } = useRouteMatch();
-
+    const [ breadcrumbItems ] = useBreadCrumb( location );
     const [ state, setState ] = useState( {
         collapsed: false,
     } );
-
     const onCollapse = ( collapsed ) => {
         setState( { collapsed } );
     };
-
     const { collapsed } = state;
-
-
     useEffect( () => {
         dispatch( authMe( history ) )
     }, [ dispatch, history ] )
-
     return (
         <Fade>
             <HelmetTitle title="Admin" />
@@ -72,9 +64,9 @@ const Admin = () => {
                     </Affix>
 
                     <Content style={ { margin: "0 16px" } }>
-                        {/* <div style={{ padding: 24 }}>
-              <Breadcrumb>{breadcrumbItems}</Breadcrumb>
-              <Switch>
+                        <div style={ { padding: 24 } }>
+                            <Breadcrumb>{ breadcrumbItems }</Breadcrumb>
+                            {/* <Switch>
                 <Redirect exact from={`${path}`} to={`${path}/home`} />
                 <Route
                   path={`${path}/home`}
@@ -88,8 +80,8 @@ const Admin = () => {
                   path={`${path}/products`}
                   render={(props) => <Products {...props} />}
                 />
-              </Switch>
-            </div> */}
+              </Switch> */}
+                        </div>
                     </Content>
                     <Footer style={ { textAlign: "center" } }>
                         { " " }

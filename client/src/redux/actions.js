@@ -1,16 +1,20 @@
-export const GET_TEST_DATA = "GET_TEST_DATA"
-export const GET_TEST_DATA_SUCCESS = "GET_TEST_DATA_SUCCESS"
-export const GET_TEST_DATA_ERROR = "GET_TEST_DATA_ERROR"
 
+export const GET_TEST_DATA = "GET_TEST_DATA" //done
+export const GET_TEST_DATA_SUCCESS = "GET_TEST_DATA_SUCCESS"  //done
+export const GET_TEST_DATA_ERROR = "GET_TEST_DATA_ERROR" //done
 
-export const AUTH_LOGIN = "AUTH_LOGIN"
-export const AUTH_LOGIN_SUCCESS = "AUTH_LOGIN_SUCCESS"
-export const AUTH_LOGIN_ERROR = "AUTH_LOGIN_ERROR"
+export const AUTH_LOGIN = "AUTH_LOGIN" //done
+export const AUTH_LOGIN_SUCCESS = "AUTH_LOGIN_SUCCESS" //done
+export const AUTH_LOGIN_ERROR = "AUTH_LOGIN_ERROR" //done
+
+export const AUTH_LOGOUT = "AUTH_LOGOUT" //done
+export const AUTH_LOGOUT_SUCCESS = "AUTH_LOGOUT_SUCCESS" //done
+export const AUTH_LOGOUT_ERROR = "AUTH_LOGOUT_ERROR" //done
 
 export const AUTH_REGISTRATION = "AUTH_REGISTRATION"
 export const AUTH_REGISTRATION_SUCCESS = "AUTH_REGISTRATION_SUCCESS"
 export const AUTH_REGISTRATION_ERROR = "AUTH_REGISTRATION_ERROR"
 
-export const AUTH_ME = "AUTH_ME"
-export const AUTH_ME_SUCCESS = "AUTH_ME_SUCCESS"
-export const AUTH_ME_ERROR = "AUTH_ME_ERROR"
+export const AUTH_ME = "AUTH_ME" //done
+export const AUTH_ME_SUCCESS = "AUTH_ME_SUCCESS" //done
+export const AUTH_ME_ERROR = "AUTH_ME_ERROR" //done
