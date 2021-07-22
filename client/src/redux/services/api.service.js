@@ -1,8 +1,5 @@
 import axios from "axios"
 
-export const token = localStorage.getItem( "token" );
-export const role = localStorage.getItem( "role" );
-export const base_url = 'url'
 
 export const delay = async ( ms ) =>
     await new Promise( ( resolve ) => {
@@ -36,4 +33,23 @@ export const fetchTestData = async () => {
     } catch ( error ) {
         return { error }
     }
+}
+
+export const fetchAuthLogin = async ( request ) =>
+    await axios.post( '/api/auth/login', request )
+        .then( ( response ) => ( { response } ) )
+        .catch( ( error ) => ( { error } ) )
+
+
+export const fetchAuthMe = async () => {
+
+    const token = localStorage.getItem( "token" );
+
+    return await axios.get( '/api/auth/me', {
+        headers: {
+            Authorization: token,
+        },
+    } )
+        .then( ( response ) => ( { response } ) )
+        .catch( ( error ) => ( { error } ) )
 }

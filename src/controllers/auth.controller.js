@@ -33,7 +33,7 @@ const authMe = async ( req, res, next ) => {
         next( ApiError.UnauthorizedError( "failid token", "wrong or invalid token" ) )
     } else {
         res.status( 200 ).json( {
-            data: _.pick( user, [ "username" ] ),
+            data: { user_info: _.pick( user, [ "username", "role" ] ) },
             message: "user info"
         } )
     }
