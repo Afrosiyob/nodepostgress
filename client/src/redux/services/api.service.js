@@ -1,13 +1,11 @@
-import axios from "axios"
+import axios from "axios";
 
-
-export const delay = async ( ms ) =>
-    await new Promise( ( resolve ) => {
-        setTimeout( () => {
+export const delay = async(ms) =>
+    await new Promise((resolve) => {
+        setTimeout(() => {
             resolve();
-        }, ms );
-    } );
-
+        }, ms);
+    });
 
 // export const fetchWithDelay = async () => {
 //     try {
@@ -24,32 +22,38 @@ export const delay = async ( ms ) =>
 //         .then( ( response ) => ( { response } ) )
 //         .catch( ( error ) => ( { error } ) )
 
-
-export const fetchTestData = async () => {
+export const fetchTestData = async() => {
     try {
-        await delay( 2000 )
-        const response = await axios.get( 'https://jsonplaceholder.typicode.com/todos' )
-        return { response }
-    } catch ( error ) {
-        return { error }
+        await delay(2000);
+        const response = await axios.get(
+            "https://jsonplaceholder.typicode.com/todos"
+        );
+        return { response };
+    } catch (error) {
+        return { error };
     }
-}
+};
 
-export const fetchAuthLogin = async ( request ) =>
-    await axios.post( '/api/auth/login', request )
-        .then( ( response ) => ( { response } ) )
-        .catch( ( error ) => ( { error } ) )
+export const fetchAuthLogin = async(request) =>
+    await axios
+    .post("/api/auth/login", request)
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
 
+export const fetchAuthMe = async() => {
+    const token = localStorage.getItem("token");
+    return await axios
+        .get("/api/auth/me", {
+            headers: {
+                Authorization: token,
+            },
+        })
+        .then((response) => ({ response }))
+        .catch((error) => ({ error }));
+};
 
-export const fetchAuthMe = async () => {
-
-    const token = localStorage.getItem( "token" );
-
-    return await axios.get( '/api/auth/me', {
-        headers: {
-            Authorization: token,
-        },
-    } )
-        .then( ( response ) => ( { response } ) )
-        .catch( ( error ) => ( { error } ) )
-}
+export const fetchAuthRegistration = async(request) =>
+    await axios
+    .post("/api/user/create", request)
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));

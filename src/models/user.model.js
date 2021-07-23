@@ -1,29 +1,28 @@
-const { DataTypes } = require( 'sequelize' );
-const { db } = require( '../../services/connect' );
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../../services/connect");
+const { Product } = require("./product.model");
 
-
-const User = db.define( 'User', {
-    // Model attributes are defined here
-    username: {
-        type: DataTypes.STRING,
-
-    },
-    password: {
-        type: DataTypes.STRING
-        // allowNull defaults to true
-    },
-    role: {
-        type: DataTypes.STRING,
-        defaultValue: "user"
+const User = sequelize.define(
+    "User", {
+        username: {
+            type: DataTypes.STRING,
+        },
+        password: {
+            type: DataTypes.STRING,
+        },
+        role: {
+            type: DataTypes.STRING,
+            defaultValue: "user",
+        },
+    }, {
+        timestamps: true,
+        freezeTableName: true,
     }
-}, {
-    freezeTableName: true
-    // Other model options go here
-} );
+);
 
-// `sequelize.define` also returns the model
-console.log( User === db.models.User ); // true
+User.hasOne(Product);
+Product.belongsTo(User);
 
 module.exports = {
-    User
-}
+    User,
+};
