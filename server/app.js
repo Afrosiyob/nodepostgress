@@ -43,6 +43,7 @@ app.use( "/api/user", userRouter );
 app.use( "/api/auth", authRouter );
 app.use( "/api/product", productRouter )
 
+
 // Error Handler
 // Please put this code after last middleware
 app.use( errorHandler );
