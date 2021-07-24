@@ -55,6 +55,18 @@ const setPermissions = ( permissions ) => async ( req, res, next ) => {
     }
 };
 
+// const getProductsByUser = async ( req, res, next ) => {
+//     const { userId } = req.user;
+//     const user = await UserModel.findById( userId );
+//     const { role } = user;
+//     if ( role === "admin" ) {
+//         req.products = await Product.find();
+//     } else {
+//         req.products = await Product.find( { UserId: userId } );
+//     }
+//     next();
+// };
+
 module.exports = {
     validationError,
     checkAuthToken,

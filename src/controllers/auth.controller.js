@@ -11,22 +11,34 @@ const authLogin = async ( req, res, next ) => {
     const { username, password } = req.body;
     const user = await User.findOne( { where: { username } } );
     if ( user === null ) {
-        next( ApiError.NotFoundError( `${ username } not found` ) );
+        await next( ApiError.NotFoundError( `${ username } not found` ) );
     } else {
         const isMatchPassword = await bcrypt.compare( password, user.password );
         if ( !isMatchPassword ) {
-            next(
+            await next(
                 ApiError.BadRequestError(
                     "failed password",
                     "please enter currect password"
                 )
             );
         } else {
-            const token = jwt.sign( { userId: user.id }, config.get( "jwtSecret" ), {
+
+            const { id, role, username } = user
+
+            const token = jwt.sign( { userId: id }, config.get( "jwtSecret" ), {
                 expiresIn: "1h",
             } );
-            res.status( 200 ).json( {
-                data: { token, user_info: _.pick( user, [ "username", "role" ] ) },
+
+            const access_token = jwt.sign( { userId: id, role: role }, config.get( "jwtSecret" ), {
+                expiresIn: "1h",
+            } );
+
+            const refresh_token = jwt.sign( { userId: id, role: role, username: username }, config.get( "jwtSecret" ), {
+                expiresIn: "1h",
+            } );
+
+            await res.status( 200 ).json( {
+                data: { token, user_info: _.pick( user, [ "username", "role" ] ), token_info: { access_token, refresh_token } },
                 message: "user info ",
             } );
         }

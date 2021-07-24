@@ -9,6 +9,7 @@ const { errorHandler } = require( "../src/errors/errorHandler" );
 const { connectDB } = require( "../connection/connect" );
 const { authRouter } = require( "../src/routes/auth.routes" );
 const path = require( "path" );
+const { productRouter } = require( "../src/routes/product.routes" );
 // Create App server
 const app = express();
 
@@ -40,6 +41,7 @@ if ( app.get( "env" ) === "development" ) {
 // Api Routes
 app.use( "/api/user", userRouter );
 app.use( "/api/auth", authRouter );
+app.use( "/api/product", productRouter )
 
 // Error Handler
 // Please put this code after last middleware

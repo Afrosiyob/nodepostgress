@@ -4,6 +4,11 @@ const { sequelize } = require( "../../connection/connect" );
 // User Model
 const User = sequelize.define(
     "User", {
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
     username: {
         type: DataTypes.STRING,
     },
@@ -42,6 +47,8 @@ const Car = sequelize.define(
     freezeTableName: true,
 }
 );
+
+// Associations
 
 ( async () => {
     User.hasOne( Product )
