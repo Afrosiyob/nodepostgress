@@ -12,7 +12,7 @@ const router = Router();
 
 router.post( "/login", authLoginValidation, validationError, authLogin );
 router.get( "/me", checkAuthToken, setPermissions( "admin" ), authMe );
-// router.post( "/refresh-tokens", refreshTokens )
+router.post( "/refresh-tokens", refreshTokens )
 
 module.exports = {
     authRouter: router,

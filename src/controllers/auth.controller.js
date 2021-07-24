@@ -5,8 +5,21 @@ const jwt = require( "jsonwebtoken" );
 const _ = require( "lodash" );
 const config = require( "config" );
 const nodemailer = require( "nodemailer" );
+const { generateAccessToken, generateRefreshToken, replaceFromDBRefreshToken } = require( "../helper/token.helper" );
+const { logger } = require( "../logger/logger" );
 
 
+
+const updateTokens = async ( userId ) => {
+    const { accessToken } = generateAccessToken( userId )
+    const { tokenId, refreshToken } = generateRefreshToken()
+    await replaceFromDBRefreshToken( tokenId, userId );
+
+    return ( {
+        accessToken,
+        refreshToken
+    } );
+}
 
 
 const authLogin = async ( req, res, next ) => {
@@ -25,12 +38,15 @@ const authLogin = async ( req, res, next ) => {
             );
         } else {
             const { id } = user;
-            const token = jwt.sign( { userId: id }, config.get( "jwtSecret" ), {
-                expiresIn: "1m",
-            } );
+            // const token = jwt.sign( { userId: id }, config.get( "jwtSecret" ), {
+            //     expiresIn: "1m",
+            // } );
+            const token_info = await updateTokens( id ).then( ( tokens ) => ( tokens ) )
+
             res.status( 200 ).json( {
                 data: {
-                    token,
+                    // token,
+                    token_info,
                     user_info: _.pick( user, [ "username", "role" ] ),
                 },
                 message: "user info ",
@@ -39,7 +55,38 @@ const authLogin = async ( req, res, next ) => {
     }
 };
 
+const refreshTokens = async ( req, res, next ) => {
+    const { refreshToken } = req.body
+    let decoded;
+    try {
+        decoded = jwt.verify( refreshToken, config.get( "jwtSecret" ) )
+        const { type } = decoded
+        if ( type && type !== 'refresh' ) {
+            next( ApiError.BadRequestError( 'error', "this is not a refresh token" ) )
+        }
+    } catch ( error ) {
+        if ( error instanceof jwt.TokenExpiredError ) {
+            next( ApiError.BadRequestError( error, "token  exparied" ) );
+        } else if ( error instanceof jwt.JsonWebTokenError ) {
+            next( ApiError.BadRequestError( error, "invalid token" ) );
+        }
+    }
+    const { tokenId } = decoded;
+    await Token.findOne( { where: { tokenId } } ).then( ( token ) => {
+        const { UserId } = token;
+        return updateTokens( UserId )
+    } )
+        .then( ( tokens ) => {
+            res.status( 200 ).json( {
+                data: tokens,
+                message: "new tokens"
+            } )
+        } ).catch( ( error ) => {
+            logger.error( error )
+            next( ApiError.BadRequestError( error, "not founded token from DB" ) )
+        } )
 
+}
 
 const authMe = async ( req, res, next ) => {
     const { userId } = req.user;
@@ -83,5 +130,5 @@ const authMe = async ( req, res, next ) => {
 module.exports = {
     authLogin,
     authMe,
-
+    refreshTokens
 };
