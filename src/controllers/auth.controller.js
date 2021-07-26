@@ -55,6 +55,21 @@ const authLogin = async ( req, res, next ) => {
     }
 };
 
+const authLogout = async ( req, res, next ) => {
+    const { userId } = req.user
+    await Token.findOne( { where: { UserId: userId } } ).then( async ( token ) => {
+        await Token.destroy( { where: { UserId: token.UserId } } ).then( () => {
+            res.status( 200 ).json( { message: "user logged out" } )
+        } ).catch( ( error ) => {
+            logger.error( error )
+            next( ApiError.BadRequestError( error, "user didnt logged out" ) )
+        } )
+    } ).catch( ( error ) => {
+        logger.error( error )
+        next( ApiError.NotFoundError( "user not founded" ) )
+    } )
+}
+
 const refreshTokens = async ( req, res, next ) => {
     const { refreshToken } = req.body
     let decoded;
@@ -130,5 +145,6 @@ const authMe = async ( req, res, next ) => {
 module.exports = {
     authLogin,
     authMe,
-    refreshTokens
+    refreshTokens,
+    authLogout
 };
