@@ -8,6 +8,7 @@ import {
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
 import {
     fetchAuthLogin,
+    fetchAuthLogout,
     fetchAuthMe,
     fetchAuthRegistration,
 } from "../services/api.service";
@@ -23,87 +24,90 @@ import {
 } from "./action";
 import { notificationMessage } from "../services/notification.service";
 
-function* watchAuthLogin () {
-    yield takeEvery( AUTH_LOGIN, workAuthLogin );
+function* watchAuthLogin() {
+    yield takeEvery(AUTH_LOGIN, workAuthLogin);
 }
 
-function* workAuthLogin ( { payload } ) {
+function* workAuthLogin({ payload }) {
     const { request, history } = payload;
-    const { response, error } = yield call( fetchAuthLogin, request );
-    if ( response ) {
+    const { response, error } = yield call(fetchAuthLogin, request);
+    if (response) {
         const { token_info, user_info } = response.data.data;
-        const { accessToken, refreshToken } = token_info
-        localStorage.setItem( "token", `Bearer ${ accessToken }` );
-        localStorage.setItem( "refreshToken", `${ refreshToken }` );
-        yield put( authLoginSuccess( user_info ) );
-        notificationMessage( "success", "auth login success" );
-        history.push( "/admin" );
+        const { accessToken, refreshToken } = token_info;
+        localStorage.setItem("token", `Bearer ${accessToken}`);
+        localStorage.setItem("refreshToken", `${refreshToken}`);
+        yield put(authLoginSuccess(user_info));
+        notificationMessage("success", "auth login success");
+        history.push("/admin");
     } else {
-        yield put( authLoginError( error.response.data.message ) );
-        notificationMessage( "error", error.response.data.message );
+        yield put(authLoginError(error.response.data.message));
+        notificationMessage("error", error.response.data.message);
     }
 }
 
-function* watchAuthMe () {
-    yield takeEvery( AUTH_ME, workAuthMe );
+function* watchAuthMe() {
+    yield takeEvery(AUTH_ME, workAuthMe);
 }
 
-function* workAuthMe ( { payload } ) {
+function* workAuthMe({ payload }) {
     const history = payload;
-    const { response, error } = yield call( fetchAuthMe );
+    const { response, error } = yield call(fetchAuthMe);
 
-    if ( response ) {
+    if (response) {
         const { user_info } = response.data.data;
-        yield put( authMeSuccess( user_info ) );
-        notificationMessage( "success", "get user info success" );
+        yield put(authMeSuccess(user_info));
+        notificationMessage("success", "get user info success");
     } else {
-        yield put( authMeError( error.response.data.message ) );
-        notificationMessage( "error", error.response.data.message );
-        localStorage.removeItem( "token" );
-        history.push( "/login" );
+        yield put(authMeError(error.response.data.message));
+        notificationMessage("error", error.response.data.message);
+        localStorage.removeItem("token");
+        history.push("/login");
     }
 }
 
-function* watchAuthLogout () {
-    yield takeEvery( AUTH_LOGOUT, workAuthLogout );
+function* watchAuthLogout() {
+    yield takeEvery(AUTH_LOGOUT, workAuthLogout);
 }
 
-function* workAuthLogout ( { payload } ) {
+function* workAuthLogout({ payload }) {
     const history = payload;
-    try {
-        yield put( authLogoutSuccess() );
-        notificationMessage( "success", "bye" );
-        localStorage.removeItem( "token" );
-        history.push( "/login" );
-    } catch ( error ) {
-        yield put( authLogoutError( error ) );
-        notificationMessage( "error", error );
-    }
-}
 
-function* watchAuthRegistration () {
-    yield takeEvery( AUTH_REGISTRATION, workAuthRegistration );
-}
+    const { response, error } = yield call(fetchAuthLogout);
 
-function* workAuthRegistration ( { payload } ) {
-    const { request, history } = payload;
-    const { response, error } = yield call( fetchAuthRegistration, request );
-
-    if ( response ) {
-        yield put( authRegistrationSuccess() );
-        notificationMessage( "success", "new user created" );
-        history.push( "/login" );
+    if (response) {
+        yield put(authLogoutSuccess());
+        notificationMessage("success", "bye");
+        localStorage.removeItem("token");
+        history.push("/login");
     } else {
-        yield put( authRegistrationError( error.response.data.message ) );
-        notificationMessage( "error", error.response.data.message );
+        yield put(authLogoutError(error.response.data.message));
+        notificationMessage("error", error.response.data.message);
     }
 }
 
-export default function* authSaga () {
-    yield all( [
-        fork( watchAuthLogin ),
-        fork( watchAuthMe ),
-        fork( watchAuthLogout ),
-        fork( watchAuthRegistration ),
-    ] );
+function* watchAuthRegistration() {
+    yield takeEvery(AUTH_REGISTRATION, workAuthRegistration);
+}
+
+function* workAuthRegistration({ payload }) {
+    const { request, history } = payload;
+    const { response, error } = yield call(fetchAuthRegistration, request);
+
+    if (response) {
+        yield put(authRegistrationSuccess());
+        notificationMessage("success", "new user created");
+        history.push("/login");
+    } else {
+        yield put(authRegistrationError(error.response.data.message));
+        notificationMessage("error", error.response.data.message);
+    }
+}
+
+export default function* authSaga() {
+    yield all([
+        fork(watchAuthLogin),
+        fork(watchAuthMe),
+        fork(watchAuthLogout),
+        fork(watchAuthRegistration),
+    ]);
 }

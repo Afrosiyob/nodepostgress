@@ -52,6 +52,18 @@ export const fetchAuthMe = async() => {
         .catch((error) => ({ error }));
 };
 
+export const fetchAuthLogout = async() => {
+    const token = localStorage.getItem("token");
+    return await axios
+        .get("/api/auth/logout", {
+            headers: {
+                Authorization: token,
+            },
+        })
+        .then((response) => ({ response }))
+        .catch((error) => ({ error }));
+};
+
 export const fetchAuthRegistration = async(request) =>
     await axios
     .post("/api/user/create", request)
