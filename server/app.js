@@ -7,6 +7,7 @@ const { logger } = require("../src/logger/logger");
 const winston = require("winston");
 const { errorHandler } = require("../src/errors/errorHandler");
 
+const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const redis = require("redis");
@@ -21,6 +22,9 @@ const app = express();
 // Access json
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
+
+// compression
+app.use(compression());
 
 // Static files
 app.use(
